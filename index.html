@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Piñata Bash</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/phaser/3.70.0/phaser.min.js"></script>
+<style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background: linear-gradient(135deg, #ff6b6b, #4ecdc4);
+        }
+        #game-container {
+            box-shadow: 0 0 20px rgba(0,0,0,0.3);
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body>
+<div id="game-container"></div>
+<script>
+        const config = {
+            type: Phaser.AUTO,
+            width: 800,
+            height: 600,
+            backgroundColor: '#87CEEB',
+            physics: {
+                default: 'arcade',
+                arcade: {
+                    gravity: { y: 300 },
+                    debug: false
+                }
+            },
+            parent: 'game-container',
+            scene: {
+                preload: preload,
+                create: create,
+                update: update
+            }
+        };
+
+        const game = new Phaser.Game(config);
+
+        let pinata;
+        let bat;
+        let cursors;
+        let score = 0;
+        let scoreText;
+        let gameState = 'playing';
+        let hitCount = 0;
+        const MAX_HITS = 10;
+        let candies = [];
+
+        function preload() {
+            // Create pinata shape
+            const pinataGraphics = this.add.graphics();
+            pinataGraphics.lineStyle(4, 0x000000);
+            pinataGraphics.fillStyle(0xFF1493);
+            pinataGraphics.beginPath();
+            pinataGraphics.moveTo(0, 0);
+            pinataGraphics.lineTo(40, -20);
+            pinataGraphics.lineTo(80, 0);
+            pinataGraphics.lineTo(40, 20);
+            pinataGraphics.closePath();
+            pinataGraphics.fill();
+            pinataGraphics.stroke();
+            pinataGraphics.generateTexture('pinata', 80, 40);
+            pinataGraphics.destroy();
+
+            // Create bat shape
+            const batGraphics = this.add.graphics();
+            batGraphics.lineStyle(4, 0x4A4A4A);
+            batGraphics.fillStyle(0x8B4513);
+            batGraphics.fillRect(-10, -40, 20, 80);
+            batGraphics.generateTexture('bat', 20, 80);
+            batGraphics.destroy();
+
+            // Create candy shape
+            const candyGraphics = this.add.graphics();
+            candyGraphics.fillStyle(0xFF0000);
+            candyGraphics.fillCircle(10, 10, 10);
+            candyGraphics.generateTexture('candy', 20, 20);
+            candyGraphics.destroy();
+        }
+
+        function create() {
+            // Add pinata
+            pinata = this.physics.add.sprite(400, 300, 'pinata');
+            pinata.setCollideWorldBounds(true);
+            pinata.setBounce(0.2);
+
+            // Add bat
+            bat = this.physics.add.sprite(100, 300, 'bat');
+            bat.setCollideWorldBounds(true);
+            bat.setBounce(0.2);
+
+            // Setup controls
+            cursors = this.input.keyboard.createCursorKeys();
+
+            // Add score text
+            scoreText = this.add.text(16, 16, 'Score: 0', { 
+                fontSize: '32px', 
+                fill: '#fff',
+                stroke: '#000',
+                strokeThickness: 4
+            });
+
+            // Setup collision
+            this.physics.add.collider(bat, pinata, hitPinata, null, this);
+        }
+
+        function update() {
+            if (gameState === 'playing') {
+                // Bat movement
+                if (cursors.left.isDown) {
+                    bat.setVelocityX(-300);
+                } else if (cursors.right.isDown) {
+                    bat.setVelocityX(300);
+                } else {
+                    bat.setVelocityX(0);
+                }
+
+                if (cursors.up.isDown) {
+                    bat.setVelocityY(-300);
+                } else if (cursors.down.isDown) {
+                    bat.setVelocityY(300);
+                } else {
+                    bat.setVelocityY(0);
+                }
+
+                // Pinata movement
+                pinata.x = 400 + Math.sin(this.time.now / 1000) * 100;
+            }
+        }
+
+        function hitPinata(bat, pinata) {
+            hitCount++;
+            score += 10;
+            scoreText.setText('Score: ' + score);
+
+            // Create candy explosion
+            for (let i = 0; i < 5; i++) {
+                const candy = this.physics.add.sprite(
+                    pinata.x,
+                    pinata.y,
+                    'candy'
+                );
+                candy.setVelocity(
+                    Phaser.Math.Between(-200, 200),
+                    Phaser.Math.Between(-200, 0)
+                );
+                candies.push(candy);
+            }
+
+            // Shake effect
+            this.cameras.main.shake(100, 0.01);
+
+            if (hitCount >= MAX_HITS) {
+                gameOver.call(this);
+            }
+        }
+
+        function gameOver() {
+            gameState = 'over';
+            
+            const gameOverText = this.add.text(400, 300, 
+                'PIÑATA SMASHED!\nFinal Score: ' + score + '\nPress SPACE to restart', {
+                fontSize: '48px',
+                fill: '#fff',
+                stroke: '#000',
+                strokeThickness: 6,
+                align: 'center'
+            });
+            gameOverText.setOrigin(0.5);
+
+            // Clean up candies
+            candies.forEach(candy => candy.destroy());
+            candies = [];
+
+            // Setup restart
+            this.input.keyboard.once('keydown-SPACE', () => {
+                this.scene.restart();
+                score = 0;
+                hitCount = 0;
+                gameState = 'playing';
+            });
+        }
+    </script>
+</body>
+</html>
+</body> and </html>
+</main>
+</body> and </html>
+</main>
+```
+
+These should be removed since they're redundant - the document already has proper closing tags.
+
+The correct ending should simply be:
+```html
+</body>
+</html>
+</body>
+</html>
+</body>
+</html>
+</body>
+</html>
+</body>
+</html>
+</body>
+</html>
+</body>
+</html>
+</body>
+</html>
+</body>
+</html>
